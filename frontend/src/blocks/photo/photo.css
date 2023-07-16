@@ -1,0 +1,9 @@
+.photo {
+  padding-top: 36px;
+}
+
+@media screen and (min-width:800px) {
+  .photo {
+    padding-top: 50px;
+  }
+}

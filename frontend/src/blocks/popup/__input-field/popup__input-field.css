@@ -1,0 +1,6 @@
+.popup__input-field {
+  border: none;
+  display: grid;
+  padding: 0;
+  margin: 0;
+}

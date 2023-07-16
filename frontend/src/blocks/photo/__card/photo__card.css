@@ -1,0 +1,9 @@
+.photo__card {
+  position: relative;
+  background-color: white;
+  border-radius: 3%;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  align-items: center;
+  justify-items: center;
+}

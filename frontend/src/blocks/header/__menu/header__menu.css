@@ -1,0 +1,13 @@
+.header__menu {
+  width: 25px;
+  height: 25px;
+  grid-area: nav;
+  justify-self: flex-end;
+  padding-right: 27px;
+}
+
+@media screen and (min-width: 600px) {
+  .header__menu {
+    display: none;
+  }
+}

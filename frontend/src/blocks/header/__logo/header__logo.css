@@ -1,0 +1,13 @@
+.header__logo {
+  display: block;
+  max-width: 103px;
+  aspect-ratio: 4 / 1;
+  grid-area: logo;
+  padding-left: 27px;
+}
+
+@media screen and (min-width: 760px) {
+  .header__logo {
+    max-width: 142px;
+  }
+}

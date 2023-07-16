@@ -1,0 +1,17 @@
+.profile__info {
+  display: grid;
+  align-items: center;
+}
+
+@media screen  and (min-width: 800px) {
+  .profile__info {
+    margin-left: 15px;
+    justify-items: flex-start;
+  }
+}
+
+@media screen  and (min-width: 1000px) {
+  .profile__info {
+    margin-left: 30px;
+  }
+}

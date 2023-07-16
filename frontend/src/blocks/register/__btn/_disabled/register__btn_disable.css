@@ -1,0 +1,6 @@
+.register__btn_disabled {
+  background-color: white;
+  color:black;
+  opacity: .2;
+  border: 1px solid black;
+}

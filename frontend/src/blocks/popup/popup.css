@@ -1,0 +1,24 @@
+.popup {
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  z-index: -2;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, Arial, sans-serif;
+  opacity: 0;
+  transform: skew(2deg,2deg);
+  transition: opacity 2s, z-index 1s, transform 2s;
+}
+
+@media screen and (min-width: 800px) {
+  .popup {
+    font-size: 24px;
+    line-height: 29px;
+  }
+}

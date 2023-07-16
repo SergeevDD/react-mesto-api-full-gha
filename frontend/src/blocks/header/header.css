@@ -1,0 +1,26 @@
+.header {
+ /*  padding-left: 27px;
+  padding-right: 27px; */
+  padding-top: 28px;
+  padding-bottom: 31px;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: grid;
+  grid-template-areas:
+    "head head"
+    "logo  nav";
+  grid-template-rows: min-content 1fr;
+  grid-template-columns: 1fr 1fr;
+
+}
+
+@media screen and (min-width: 900px) {
+  .header {
+    padding-left: 0;
+    padding-top: 45px;
+    padding-bottom: 41px;
+    max-width: 880px;
+  }
+}
