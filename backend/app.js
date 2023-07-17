@@ -6,12 +6,12 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors')
+const cors = require('./middlewares/cors');
 require('dotenv').config();
 
 const {
   PORT = '3000',
-  DB_URI = 'mongodb://localhost:27017/mestodb'
+  DB_URI = 'mongodb://localhost:27017/mestodb',
 } = process.env;
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.json());
 mongoose.connect(DB_URI, {
   family: 4,
 });
-/*----------------crashtest*/
+/* ----------------crashtest */
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -61,7 +61,8 @@ app.use('*', () => { throw new NotFoundError('Запрошен несущест�
 app.use(errorLogger);
 
 app.use(errors());
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode)
     .send({

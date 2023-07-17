@@ -1,11 +1,10 @@
-const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
+const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'http://sergeev.dmitry.nomoredomains.xyz',
-  'localhost:3000'
+  'localhost:3000',
 ];
 
 module.exports = (req, res, next) => {
-
   const { origin } = req.headers;
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
@@ -15,11 +14,14 @@ module.exports = (req, res, next) => {
       'Access-Control-Allow-Headers': requestHeaders,
       'Access-Control-Allow-Methods': DEFAULT_ALLOWED_METHODS,
     });
-    return res.end();
+    res.end();
+    return;
   }
 
   if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
+    res.header({
+      'Access-Control-Allow-Origin': origin,
+    });
   }
   next();
 };

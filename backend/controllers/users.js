@@ -26,7 +26,8 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch(() => { throw new DuplicateErrorError('Введенная почта уже используется'); })
     .then((newUser) => {
-      const { pass, ...result } = newUser.toObject();
+      // eslint-disable-next-line no-shadow
+      const { password, ...result } = newUser.toObject();
       res.send({ data: result });
     })
     .catch(next);
@@ -107,11 +108,11 @@ module.exports.login = (req, res, next) => {
           }
           const token = jwt.sign(
             { _id: user._id },
-            process.env.NODE_ENV === 'production' ?
-            process.env.SECRET_KEY :
-            'sekret',
-            { expiresIn: '7d' }
-            );
+            process.env.NODE_ENV === 'production'
+              ? process.env.SECRET_KEY
+              : 'sekret',
+            { expiresIn: '7d' },
+          );
           res.cookie('jwt', token, {
             maxAge: 3600000,
             httpOnly: true,
