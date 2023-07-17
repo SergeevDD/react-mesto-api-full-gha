@@ -12,6 +12,6 @@
 
 IP-адрес 158.160.17.163
 
-Frontend https://github.com/SergeevDD/react-mesto-api-full-gha/tree/main/frontend
+Frontend sergeev.dmitry.nomoredomains.xyz
 
-Backend https://github.com/SergeevDD/react-mesto-api-full-gha/tree/main/backend
+Backend api.sergeev.dmitry.nomoredomains.xyz

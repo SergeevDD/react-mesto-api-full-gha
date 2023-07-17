@@ -105,8 +105,13 @@ module.exports.login = (req, res, next) => {
           if (!match) {
             throw new AuthenticationError('Неправильные почта или пароль');
           }
-
-          const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY, { expiresIn: '7d' });
+          const token = jwt.sign(
+            { _id: user._id },
+            process.env.NODE_ENV === 'production' ?
+            process.env.SECRET_KEY :
+            'sekret',
+            { expiresIn: '7d' }
+            );
           res.cookie('jwt', token, {
             maxAge: 3600000,
             httpOnly: true,

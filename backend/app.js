@@ -6,6 +6,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const cors = require('./middlewares/cors')
 require('dotenv').config();
 
 const { PORT, DB_URI } = process.env;
@@ -15,8 +16,16 @@ app.use(express.json());
 mongoose.connect(DB_URI, {
   family: 4,
 });
-
+/*----------------crashtest*/
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+/*--------------------------------*/
 app.use(requestLogger);
+
+app.use(cors);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
