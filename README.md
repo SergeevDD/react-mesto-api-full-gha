@@ -12,6 +12,6 @@
 
 IP-адрес 158.160.17.163
 
-Frontend sergeev.dmitry.nomoredomains.xyz
+Frontend http://sergeev.dmitry.nomoredomains.xyz
 
-Backend api.sergeev.dmitry.nomoredomains.xyz
+Backend http://api.sergeev.dmitry.nomoredomains.xyz
