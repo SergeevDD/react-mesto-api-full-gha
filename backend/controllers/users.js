@@ -89,7 +89,7 @@ module.exports.setAvatar = (req, res, next) => {
       if (!foundUser) {
         throw new NotFoundError('Не удалось сменить аватар');
       }
-      res.send({ avatar: user.avatar });
+      res.send({ avatar: foundUser.avatar });
     })
     .catch(next);
 };
@@ -107,7 +107,7 @@ module.exports.login = (req, res, next) => {
             throw new AuthenticationError('Неправильные почта или пароль');
           }
           const token = jwt.sign(
-            { _id: user._id },
+            { _id: foundUser._id },
             process.env.NODE_ENV === 'production'
               ? process.env.SECRET_KEY
               : 'sekret',
@@ -117,7 +117,7 @@ module.exports.login = (req, res, next) => {
             maxAge: 3600000,
             httpOnly: true,
           });
-          res.send({ data: `${user.email} -> Авторицазия прошла успешно` });
+          res.send({ data: `${foundUser.email} -> Авторицазия прошла успешно` });
         })
         .catch(() => { throw new AuthenticationError('Ошибка создания токена'); });
     })
