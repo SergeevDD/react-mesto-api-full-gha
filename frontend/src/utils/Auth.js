@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://api.sergeev.dmitry.nomoredomains.xyz';
 
 
 
@@ -32,6 +32,12 @@ export const authorize = (email, password) => {
     body: JSON.stringify({ email, password })
   })
     .then((response => response.json()))
+    .then((data) => {
+      if (data.email) {
+        sessionStorage.setItem('loggedin', true);
+        return data;
+      }
+    })
     .catch(err => console.log(err))
 };
 

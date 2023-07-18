@@ -12,7 +12,6 @@ import DeleteCardPopup from './DeleteCardPopup';
 import ImagePopup from './ImagePopup.js';
 import { api } from '../utils/Api.js'
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
-import defaultAvatar from '../images/photo/default_ava.png'
 import Login from './Login.js';
 import Register from './Register.js';
 import InfoTooltip from './InfoTooltip.js';
@@ -152,8 +151,10 @@ function App() {
   function handleSignout() {
     logout()
       .then((answ) => {
-        if (answ) {
+        if (answ.bye) {
+          localStorage.removeItem('loggedin');
           setLoggedIn(false);
+          setCurrentUser({});
           navigate("/sign-in")
         }
       })
@@ -167,12 +168,7 @@ function App() {
   const [isEditAvatarPopupOpen, setAvatarPopup] = useState(false);
   const [isDeletePopupOpen, setDeletePopup] = useState(false);
   const [selectedCard, setSelectedCard] = useState({})
-  const [currentUser, setCurrentUser] = useState(
-    {
-      name: "Имя",
-      about: "Деятельность",
-      avatar: { defaultAvatar }
-    });
+  const [currentUser, setCurrentUser] = useState({name:'', about:'', avatar:''});
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('@email');
@@ -181,7 +177,9 @@ function App() {
 
 
   useEffect(() => {
-   /*  handleCheckToken() */
+    if (sessionStorage.getItem('loggedin')) {
+      handleCheckToken()
+    }
     // eslint-disable-next-line
   }, []);
 

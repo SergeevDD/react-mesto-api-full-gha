@@ -93,12 +93,12 @@ module.exports.setAvatar = (req, res, next) => {
 };
 module.exports.logout = (req, res) => {
   try {
-    res.cleaeCookie('jwt', { httpOnly: true });
-    res.cookie('jwt', '0', {
+    res.clearCookie('jwt', { httpOnly: true });
+    /* res.cookie('jwt', '0', {
       e: Date(0),
       httpOnly: true,
-    });
-    res.send('До встречи!');
+    }); */
+    res.send({ bye: 'До встречи!' });
   } catch (err) { throw new Error(err); }
 };
 

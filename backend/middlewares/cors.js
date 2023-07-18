@@ -1,11 +1,8 @@
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const allowedCors = [
   'http://sergeev.dmitry.nomoredomains.xyz',
-  'http://localhost:3000',
   'https://sergeev.dmitry.nomoredomains.xyz',
-  'https://localhost:3000',
-  'http://api.sergeev.dmitry.nomoredomains.xyz',
-  'https://api.sergeev.dmitry.nomoredomains.xyz',
+
 ];
 
 // eslint-disable-next-line consistent-return
