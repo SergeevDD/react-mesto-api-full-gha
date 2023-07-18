@@ -2,6 +2,7 @@ class Api {
   constructor(options) {
     this._baseUrl = options.baseUrl;
     this._headers = options.headers;
+    this._credentials = options.credentials;
   }
 
   _checkResponse(response) {
@@ -17,15 +18,13 @@ class Api {
 
   getInitialCards() {
     return this._request(`${this._baseUrl}cards`, {
-      headers:
-        { authorization: this._headers.authorization }
+      credentials: this._credentials,
     })
   }
 
   getUserData() {
     return this._request(`${this._baseUrl}users/me`, {
-      headers:
-        { authorization: this._headers.authorization }
+        credentials: this._credentials,
     })
   }
 
@@ -33,6 +32,7 @@ class Api {
     return this._request(`${this._baseUrl}users/me`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         name: userData.name,
         about: userData.about,
@@ -44,6 +44,7 @@ class Api {
     return this._request(`${this._baseUrl}cards`, {
       method: 'POST',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         name: cardData.name,
         link: cardData.link,
@@ -55,6 +56,7 @@ class Api {
     return this._request(`${this._baseUrl}cards/${cardId}`, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: this._credentials,
     })
   };
 
@@ -66,6 +68,7 @@ class Api {
     return this._request(`${this._baseUrl}cards/${cardId}/likes`, {
       method: method,
       headers: this._headers,
+      credentials: this._credentials,
     })
   }
 
@@ -73,6 +76,7 @@ class Api {
     return this._request(`${this._baseUrl}users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         avatar: avatarLink.link
       })
@@ -81,9 +85,9 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-64/',
+  baseUrl: 'http://localhost:3000/',
   headers: {
-    authorization: '3c534f09-d342-4d2e-b9ef-3f9b232c8ade',
     'Content-Type': 'application/json'
-  }
+  },
+  credentials: 'include',
 });

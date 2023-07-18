@@ -16,7 +16,7 @@ import defaultAvatar from '../images/photo/default_ava.png'
 import Login from './Login.js';
 import Register from './Register.js';
 import InfoTooltip from './InfoTooltip.js';
-import { authorize, register, checkToken } from '../utils/Auth';
+import { authorize, register, checkToken, logout } from '../utils/Auth';
 
 function App() {
 
@@ -37,10 +37,11 @@ function App() {
   function handleCardLike(card, isLiked) {
     api.toggleLike(isLiked, card._id)
       .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        setCards((state) => state.map((c) => { return c._id === newCard._id ? newCard : c }));
       })
       .catch((err) => console.log('Ошибка:', err))
   }
+
   function confirmDelete() {
     setIsLoading(true)
     api.removeCard(isConfirmed)
@@ -51,7 +52,6 @@ function App() {
       .catch((err) => console.log('Ошибка:', err))
       .finally(() => {
         setIsLoading(false)
-
       })
   }
 
@@ -63,8 +63,8 @@ function App() {
   function handleUpdateUser(user) {
     setIsLoading(true)
     api.setUserData(user)
-      .then((newUser) => {
-        setCurrentUser(newUser);
+      .then(({ name, about, avatar, _id }) => {
+        setCurrentUser({ name, about, avatar, _id });
         setProfilePopup(false);
       })
       .catch((err) => console.log('Ошибка:', err))
@@ -105,17 +105,22 @@ function App() {
   const navigate = useNavigate();
 
   function handleCheckToken() {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-      checkToken(jwt).then((res) => {
-        if (res) {
-          setUserEmail(res.data.email);
-          setLoggedIn(true);
-          navigate("/", { replace: true })
+    checkToken()
+      .then((res) => {
+        if (res._id) {
+          setUserEmail(res.email);
+          Promise.all([api.getUserData(), api.getInitialCards()])
+            .then(([{ name, about, avatar, _id }, cardList]) => {
+              setCurrentUser({ name, about, avatar, _id })
+              setCards(cardList)
+              setLoggedIn(true);
+              navigate("/", { replace: true })
+            }
+            )
+            .catch((err) => console.log('Ошибка:', err))
         }
       })
-        .catch((err) => console.log('Ошибка:', err))
-    }
+      .catch((err) => console.log('Ошибка:', err))
   }
 
   function handleRegister(data) {
@@ -145,9 +150,14 @@ function App() {
   }
 
   function handleSignout() {
-    localStorage.removeItem('jwt');
-    setLoggedIn(false);
-    navigate("/sign-in")
+    logout()
+      .then((answ) => {
+        if (answ) {
+          setLoggedIn(false);
+          navigate("/sign-in")
+        }
+      })
+      .catch(err => { console.log(err) })
   }
 
   const [isConfirmed, setIsConfirmed] = useState('');
@@ -163,6 +173,7 @@ function App() {
       about: "Деятельность",
       avatar: { defaultAvatar }
     });
+
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('@email');
   const [isTooltipOpen, setInfoTooltip] = useState('');
@@ -170,14 +181,7 @@ function App() {
 
 
   useEffect(() => {
-    handleCheckToken();
-    Promise.all([api.getUserData(), api.getInitialCards()])
-      .then(([{ name, about, avatar, _id }, cardList]) => {
-        setCurrentUser({ name, about, avatar, _id })
-        setCards(cardList)
-      }
-      )
-      .catch((err) => console.log('Ошибка:', err))
+   /*  handleCheckToken() */
     // eslint-disable-next-line
   }, []);
 
@@ -188,21 +192,21 @@ function App() {
         loggedIn={isLoggedIn}
         handleSignOut={handleSignout}
         userEmail={userEmail} />
-        <Routes>
-          <Route path="/" element={isLoggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
-          <Route path="/sign-up" element={<Register handleRegister={handleRegister} />} />
-          <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
-          <Route path="/main" element={<ProtectedRouteElement element={Main}
-            loggedIn={isLoggedIn}
-            cards={cards}
-            onEditAvatar={handleEditAvatarClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditProfile={handleEditProfileClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={isLoggedIn ? <Navigate to="/main" replace /> : <Navigate to="/sign-in" replace />} />
+        <Route path="/sign-up" element={<Register handleRegister={handleRegister} />} />
+        <Route path="/sign-in" element={<Login handleLogin={handleLogin} />} />
+        <Route path="/main" element={<ProtectedRouteElement element={Main}
+          loggedIn={isLoggedIn}
+          cards={cards}
+          onEditAvatar={handleEditAvatarClick}
+          onAddPlace={handleAddPlaceClick}
+          onEditProfile={handleEditProfileClick}
+          onCardClick={handleCardClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
+        />} />
+      </Routes>
       <Footer />
       {isTooltipOpen !== '' ? < InfoTooltip
         isOk={isTooltipOpen}

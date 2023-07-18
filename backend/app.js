@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { celebrate, Joi, errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const { login, createUser } = require('./controllers/users');
+const { login, logout, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found-err');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -51,6 +51,7 @@ app.post('/signup', celebrate({
 
 app.use(cookieParser());
 app.use(auth);
+app.delete('/logout', logout);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));

@@ -2,7 +2,7 @@ const card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const AccessError = require('../errors/access-err');
 
-module.exports.createCard = (req, res, next) => {
+module.exports.createCard = async (req, res, next) => {
   const {
     name,
     link,
@@ -10,13 +10,15 @@ module.exports.createCard = (req, res, next) => {
     likes = [],
     createAt,
   } = req.body;
-  card.create({
+  // eslint-disable-next-line new-cap
+  await card.create({
     name,
     link,
     owner,
     likes,
     createAt,
   })
+    .then((populateCard) => populateCard.populate('owner'))
     .then((newCard) => {
       if (!newCard) {
         throw new NotFoundError('Не удалось создать карточку');
@@ -33,7 +35,7 @@ module.exports.getCards = (req, res, next) => {
       if (!cards) {
         throw new NotFoundError('Карточки не найдены');
       }
-      res.send({ data: cards });
+      res.send(cards);
     })
     .catch(next);
 };
@@ -63,11 +65,13 @@ module.exports.addLike = (req, res, next) => {
   card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user } },
+    { new: true },
   )
-    .then((cards) => {
-      if (cards) {
-        res.send({ data: cards });
-      } else if (!cards) {
+    .populate('likes owner')
+    .then((likedCard) => {
+      if (likedCard) {
+        res.send(likedCard);
+      } else if (!likedCard) {
         throw new NotFoundError(`Данные не обновлены, карточка с id:${req.params.cardId} отсутствует`);
       }
     })
@@ -78,10 +82,12 @@ module.exports.removeLike = (req, res, next) => {
   card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user } },
+    { new: true },
   )
-    .then((cards) => {
-      if (cards) {
-        res.send({ data: cards });
+    .populate('likes owner')
+    .then((dislikedCard) => {
+      if (dislikedCard) {
+        res.send(dislikedCard);
       } else {
         throw new NotFoundError(`Данные не обновлены, карточка с id:${req.params.cardId} отсутствует`);
       }

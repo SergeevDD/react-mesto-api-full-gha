@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'http://localhost:3000';
 
 
 
@@ -8,6 +8,7 @@ export const register = (password, email) => {
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({ password, email })
   })
     .then((response) => {
@@ -27,25 +28,32 @@ export const authorize = (email, password) => {
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({ email, password })
   })
     .then((response => response.json()))
-    .then((data) => {
-      if ('token' in data) {
-        localStorage.setItem('jwt', data.token);
-        return data;
-      }
-    })
     .catch(err => console.log(err))
 };
 
-export const checkToken = (token) => {
+export const checkToken = () => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    }
+    },
+    credentials: 'include',
+  })
+    .then(res => res.json())
+    .catch((err) => console.log('Ошибка:', err))
+}
+
+export const logout = () => {
+  return fetch(`${BASE_URL}/logout`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
   })
     .then(res => res.json())
     .catch((err) => console.log('Ошибка:', err))

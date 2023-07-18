@@ -40,7 +40,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!foundUser) {
         throw new NotFoundError('Информация о пользователе отсутствует');
       }
-      res.send({ data: foundUser });
+      res.send(foundUser);
     })
     .catch(next);
 };
@@ -67,11 +67,11 @@ module.exports.setUserInfo = (req, res, next) => {
       runValidators: true,
     },
   )
-    .then((users) => {
-      if (!users) {
+    .then((userInfo) => {
+      if (!userInfo) {
         throw new NotFoundError('Не удалось обновить данные пользователя');
       }
-      res.send({ data: users });
+      res.send(userInfo);
     })
     .catch(next);
 };
@@ -81,17 +81,25 @@ module.exports.setAvatar = (req, res, next) => {
   user.findByIdAndUpdate(
     req.user,
     { avatar },
-    {
-      new: true,
-    },
+    { new: true },
   )
     .then((foundUser) => {
       if (!foundUser) {
         throw new NotFoundError('Не удалось сменить аватар');
       }
-      res.send({ avatar: foundUser.avatar });
+      res.send(foundUser);
     })
     .catch(next);
+};
+module.exports.logout = (req, res) => {
+  try {
+    res.cleaeCookie('jwt', { httpOnly: true });
+    res.cookie('jwt', '0', {
+      e: Date(0),
+      httpOnly: true,
+    });
+    res.send('До встречи!');
+  } catch (err) { throw new Error(err); }
 };
 
 module.exports.login = (req, res, next) => {
