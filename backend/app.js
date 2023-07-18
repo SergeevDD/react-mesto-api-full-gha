@@ -19,6 +19,10 @@ app.use(express.json());
 mongoose.connect(DB_URI, {
   family: 4,
 });
+
+app.use(requestLogger);
+
+app.use(cors);
 /* ----------------crashtest */
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -26,10 +30,6 @@ app.get('/crash-test', () => {
   }, 0);
 });
 /*--------------------------------*/
-app.use(requestLogger);
-
-app.use(cors);
-
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().min(2).max(30)
