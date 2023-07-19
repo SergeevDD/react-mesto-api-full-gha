@@ -125,7 +125,7 @@ module.exports.login = (req, res, next) => {
             maxAge: 3600000,
             httpOnly: true,
           });
-          res.send({ data: `${foundUser.email} -> Авторицазия прошла успешно` });
+          res.send({ email: foundUser.email });
         })
         .catch(() => { throw new AuthenticationError('Ошибка создания токена'); });
     })

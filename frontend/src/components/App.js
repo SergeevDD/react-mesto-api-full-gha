@@ -152,7 +152,7 @@ function App() {
     logout()
       .then((answ) => {
         if (answ.bye) {
-          localStorage.removeItem('loggedin');
+          sessionStorage.removeItem('loggedin');
           setLoggedIn(false);
           setCurrentUser({});
           navigate("/sign-in")
